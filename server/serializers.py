@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import *
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,3 +13,8 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data['permissions'] = {}
         user = User.objects.create_user(**validated_data)
         return user
+    
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = '__all__'
