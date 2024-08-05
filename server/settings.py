@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'aifactura-czeue2a4bacchxhs.germanywestcentral-01.azurewebsites.net',
+    'localhost',
+    '127.0.0.1',
     # other allowed hosts
 ]
 
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'server',
 ]
 
 MIDDLEWARE = [
@@ -81,11 +84,15 @@ WSGI_APPLICATION = 'server.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'IAFACTURA_DB',
+        'USER': 'postgres',
+        'PASSWORD': 'rapidistul38',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
-
+AUTH_USER_MODEL = 'server.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
