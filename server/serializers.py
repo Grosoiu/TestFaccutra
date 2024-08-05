@@ -13,3 +13,9 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data['permissions'] = {}
         user = User.objects.create_user(**validated_data)
         return user
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
