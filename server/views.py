@@ -8,7 +8,10 @@ from django.shortcuts import get_object_or_404
 from .models import User
 from rest_framework.authtoken.models import Token
 
-from .serializers import UserSerializer
+from .serializers import *
+
+#Custom function
+from .utils import get_company_based_on_CUI
 
 @api_view(['POST'])
 def signup(request):
@@ -33,3 +36,39 @@ def login(request):
 @permission_classes([IsAuthenticated])
 def test_token(request):
     return Response("passed!")
+
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def create_company(request):
+    user = request.user
+    cui = request.data.get('cui')
+    if not cui:
+        return Response({'error': 'CUI is required'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        company_info = get_company_based_on_CUI(cui)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+    company_data = {
+        'user': user.id,
+        'company_registration_number': company_info.company_registration_number,
+        'company_tin': company_info.company_tin,
+        'company_name': company_info.company_name,
+        'company_address_country_subentity': company_info.company_address_country_subentity,
+        'company_address_country': company_info.company_address_country,
+        'company_address_country_code': company_info.company_address_country_code,
+        'company_address_country_subentity_code': company_info.company_address_country_subentity_code,
+        'company_address_city': company_info.company_address_city,
+        'company_address_street': company_info.company_address_street,
+        'company_address_details': company_info.company_address_details,
+        'company_vat_status': company_info.company_vat_status,
+        'company_vat_number': company_info.company_vat_number,
+    }
+
+    serializer = CompanySerializer(data=company_data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

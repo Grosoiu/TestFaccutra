@@ -39,3 +39,22 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+
+class Company(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='companies')
+    company_registration_number = models.CharField(max_length=50)
+    company_tin = models.CharField(max_length=50)
+    company_name = models.CharField(max_length=255)
+    company_address_country_subentity = models.CharField(max_length=100)
+    company_address_country = models.CharField(max_length=100, default='Romania')
+    company_address_country_code = models.CharField(max_length=10, default='RO')
+    company_address_country_subentity_code = models.CharField(max_length=10)
+    company_address_city = models.CharField(max_length=100)
+    company_address_street = models.CharField(max_length=255)
+    company_address_details = models.CharField(max_length=255, blank=True, null=True)
+    company_vat_status = models.BooleanField(default=False)
+    company_vat_number = models.CharField(max_length=50, blank=True, null=True)
+    additional_info = JSONField(default=dict, blank=True)
+
+    def __str__(self):
+        return self.company_name
