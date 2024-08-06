@@ -24,9 +24,10 @@ class User(AbstractBaseUser):
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     is_2fa_active = models.BooleanField(default=False)
     status = models.CharField(max_length=20, default='pending')
+    name = models.CharField(max_length=255, blank=True, null=True)  # New field added
     creation_time = models.DateTimeField(auto_now_add=True)
     last_active_time = models.DateTimeField(auto_now=True)
-    permissions = JSONField(default=dict, blank=True)  # Use JSONField from django.db.models
+    permissions = models.JSONField(default=dict, blank=True)  # Use JSONField from django.db.models
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -39,6 +40,7 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+
 
 class Company(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='companies')
